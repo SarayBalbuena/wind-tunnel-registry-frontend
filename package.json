@@ -27,7 +27,7 @@
     "swr": "^2.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
+    "@babel/core": "^8.0.1",
     "@biomejs/biome": "2.4.11",
     "@chakra-ui/cli": "^3.34.0",
     "@rolldown/plugin-babel": "^0.2.1",
