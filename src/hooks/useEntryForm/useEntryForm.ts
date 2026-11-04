@@ -1,11 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   buildEntryPayload,
-  entryFormDefaultValues,
+  getDefaultEntryFormValues,
   getEntryFormValues,
+  readLastEntryType,
+  saveLastEntryType,
 } from '@components/Entries/EntryFormDialog/EntryFormDialog.helpers.ts';
 import { type EntryFormValues } from '@components/Entries/EntryFormDialog/EntryFormDialog.types.ts';
-import { type Entry } from '@services/entriesService/entries.service.types.ts';
+import {
+  type Entry,
+  type EntryType,
+} from '@services/entriesService/entries.service.types.ts';
 import { useForm } from 'react-hook-form';
 import { type EntryFormMode } from '@/context/DashboardUIContext/DashboardUIContext.types.ts';
 
@@ -23,26 +28,38 @@ export const useEntryForm = ({
   onSubmit,
 }: UseEntryFormParams) => {
   const form = useForm<EntryFormValues>({
-    defaultValues: entryFormDefaultValues,
+    defaultValues: getDefaultEntryFormValues(),
     mode: 'onChange',
   });
+
+  // The type used for the previous new entry, read each time the form opens
+  const [lastEntryType, setLastEntryType] = useState<EntryType | null>(null);
 
   const { reset, handleSubmit, trigger } = form;
 
   useEffect(() => {
     if (!open) return;
 
-    reset(getEntryFormValues(mode === 'edit' ? entry : null));
+    const lastType = readLastEntryType();
+    setLastEntryType(lastType);
+
+    reset(
+      getEntryFormValues(mode === 'edit' ? entry : null, lastType ?? undefined),
+    );
 
     void trigger();
   }, [open, mode, entry, reset, trigger]);
 
   const submitForm = handleSubmit(async (values) => {
-    await onSubmit(buildEntryPayload(values));
+    const payload = buildEntryPayload(values);
+    await onSubmit(payload);
+
+    if (mode === 'create') saveLastEntryType(payload.type);
   });
 
   return {
     ...form,
     submitForm,
+    lastEntryType,
   };
 };

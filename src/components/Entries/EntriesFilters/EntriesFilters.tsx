@@ -1,4 +1,5 @@
 import { SORT_OPTIONS } from '@components/Entries/Entries.helpers.ts';
+import { ENTRIES_SEARCH_ID } from '@hooks/useDashboardShortcuts/useDashboardShortcuts.ts';
 import { type EntriesSort } from '@hooks/useEntriesFilters/useEntriesFilters.ts';
 import { type EntryTypeFilter } from '@services/entriesService/entries.service.types.ts';
 import { getClassNames } from '@services/utils/getClassNames.ts';
@@ -61,11 +62,14 @@ export const EntriesFilters = ({
           [styles.input]: true,
           [styles.searchInput]: true,
         })}
+        id={ENTRIES_SEARCH_ID}
+        aria-keyshortcuts="/"
         value={search}
         placeholder="Search notes"
         aria-label="Search notes"
         onChange={(event) => onSearchChange(event.target.value)}
       />
+      <kbd className={styles.shortcut}>/</kbd>
     </label>
 
     <select

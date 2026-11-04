@@ -9,6 +9,9 @@ export interface EntriesGroup {
   totalMinutes: number;
 }
 
+/** How long the "Entry deleted" toast, with its Undo action, stays visible. */
+export const UNDO_DURATION_MS = 6000;
+
 export const SORT_OPTIONS: { value: EntriesSort; label: string }[] = [
   { value: 'newest', label: 'Newest first' },
   { value: 'oldest', label: 'Oldest first' },

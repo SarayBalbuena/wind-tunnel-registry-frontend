@@ -8,6 +8,7 @@
 | State worth keeping on reload or sharing | URL search params (`useEntriesFilters`) | flight log `type`, `date`, `q` (note search) and `sort` |
 | Auth | `AuthContext` (wraps `useCheckSession`) | `isAuthenticated`, `name`, `loading` |
 | Form state | `react-hook-form` inside a dedicated hook | `useEntryForm` |
+| Per-browser preference | `localStorage`, always in `try/catch` | last used entry type (`readLastEntryType` / `saveLastEntryType`) |
 | Local UI state | `useState` in the component | `entryToDelete` in `Entries` |
 
 Prefer the lowest row that works. Don't put server data in `useState`.

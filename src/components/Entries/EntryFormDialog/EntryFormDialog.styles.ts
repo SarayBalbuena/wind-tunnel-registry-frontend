@@ -20,14 +20,6 @@ export const entryFieldStyles = {
   },
 };
 
-export const entrySelectContentStyles = {
-  borderRadius: 'xl',
-  bg: 'surface.card',
-  border: '1px solid',
-  borderColor: 'surface.border',
-  boxShadow: 'lg',
-};
-
 export const entryDialogBackdropStyles = {
   bg: 'rgba(11, 13, 18, 0.6)',
   backdropFilter: 'blur(6px)',
@@ -90,4 +82,11 @@ export const entryDialogSubmitButtonStyles = {
     _hover: { bg: 'blue.400' },
     _active: { bg: 'blue.600' },
   },
+};
+
+export const entryChipStyles = {
+  size: 'xs' as const,
+  borderRadius: 'full',
+  fontWeight: '600',
+  fontVariantNumeric: 'tabular-nums',
 };

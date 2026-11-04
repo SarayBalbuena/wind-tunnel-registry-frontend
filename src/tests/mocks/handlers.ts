@@ -27,4 +27,14 @@ export const handlers = [
 
     return HttpResponse.json(entries, { status: 200 });
   }),
+  http.post(`${API_URL}/entries`, async ({ request }) => {
+    const payload = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json(
+      { id: 'new-entry-id', ...payload },
+      { status: 201 },
+    );
+  }),
+  http.delete(`${API_URL}/entries/:id`, () => {
+    return HttpResponse.json({ ok: true }, { status: 200 });
+  }),
 ];
