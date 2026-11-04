@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { DashboardButton } from '@components/DashboardButton/DashboardButton.tsx';
 import { HomePreview } from '@components/Home/HomePreview/HomePreview.tsx';
-import { LoginButton } from '@components/LoginButton/LoginButton.tsx';
+import { LoginOptions } from '@components/LoginOptions/LoginOptions.tsx';
 import { useDashboardData } from '@hooks/useDashboard/useDashboard.ts';
 import { useDashboardUI } from '@hooks/useDashboardUI/useDashboardUI.ts';
 import { getClassNames } from '@services/utils/getClassNames.ts';
@@ -87,11 +87,10 @@ export const HomeHero = ({ isAuthenticated, loading }: HomeHeroProps) => {
 
         {!loading && !isAuthenticated && (
           <>
-            <div className={styles.cta}>
-              <LoginButton />
-            </div>
+            <LoginOptions />
             <p className={styles.fine}>
-              Free to use. Sign in with Google, no password to remember.
+              Free to use. Sign in with Google or an emailed link, no password
+              to remember.
             </p>
           </>
         )}

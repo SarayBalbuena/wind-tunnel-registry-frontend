@@ -1,0 +1,25 @@
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 460px;
+  font-size: 13px;
+  color: var(--chakra-colors-fg-subtle);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--chakra-colors-border-muted);
+}

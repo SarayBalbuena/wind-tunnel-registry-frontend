@@ -8,6 +8,12 @@ export const handlers = [
   http.get(`${API_URL}/auth/session`, () => {
     return HttpResponse.json(CHECK_SESSION_MOCK, { status: 200 });
   }),
+  http.post(`${API_URL}/auth/magic-link`, () => {
+    return HttpResponse.json(
+      { message: 'If the email is valid, a login link has been sent.' },
+      { status: 202 },
+    );
+  }),
   http.get(`${API_URL}/auth/logout`, () => {
     return HttpResponse.json(LOGOUT_MOCK, { status: 200 });
   }),
