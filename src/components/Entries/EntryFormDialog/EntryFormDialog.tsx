@@ -54,7 +54,7 @@ export const EntryFormDialog = ({
       open={open}
       onOpenChange={onOpenChange}
       onCancel={() => onOpenChange({ open: false })}
-      title={mode === 'create' ? 'CREAT ENTRY' : 'EDIT ENTRY'}
+      title={mode === 'create' ? 'CREATE ENTRY' : 'EDIT ENTRY'}
       submitText={mode === 'create' ? 'Create' : 'Save'}
       cancelText="Cancel"
       isLoading={isLoading}
