@@ -66,7 +66,8 @@ Deeper docs:
 
 ## Claude tooling in this repo
 
-- Skills (`.claude/skills/`): `new-component`, `new-api-resource`, `new-page`, `testing`, `create-pull-request`, `consolidate-dependabot`, plus Bluebox skills.
+- Skills (`.claude/skills/`): `new-component`, `new-api-resource`, `new-page`, `testing`, `verify-code` (run before create/refactor and before every PR), `create-pull-request`, `consolidate-dependabot`, plus Bluebox skills.
+- Hooks (`.claude/settings.json`): `PostToolUse` on `Edit|Write` runs `biome check --write` on the edited file (format, safe fixes, import order). It does not replace `verify-code` (build + tests).
 - Agents (`.claude/agents/`): `feature-builder`, `test-writer`, `code-reviewer`, `ui-stylist`.
 
 ## Git

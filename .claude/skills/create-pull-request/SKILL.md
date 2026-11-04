@@ -52,6 +52,8 @@ Examples from history: `feat/delete-entry`, `feat/user-menu-redesign`, `fix/css-
 
 ## 3. Verify before committing
 
+Invoke the `verify-code` skill first (Biome, import rules, build, tests); it is mandatory before every commit/PR. The commands below are what it runs.
+
 CI runs these on every PR. Run them locally first:
 
 ```bash
