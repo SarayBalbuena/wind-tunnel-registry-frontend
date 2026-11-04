@@ -2,13 +2,37 @@ import babel from '@rolldown/plugin-babel';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import { loadEnv } from 'vite';
 import { defineConfig } from 'vitest/config';
+import { execSync } from 'node:child_process';
 import path from 'node:path';
+
+const git = (cmd: string) => {
+  try {
+    return execSync(`git ${cmd}`, { stdio: ['ignore', 'pipe', 'ignore'] })
+      .toString()
+      .trim();
+  } catch {
+    return '';
+  }
+};
+
+// Canonical https form: no credentials, no trailing ".git" or slash.
+const normalizeRemote = (url: string) =>
+  url
+    .replace(/^git@([^:]+):/, 'https://$1/')
+    .replace(/^ssh:\/\/(?:[^@/]+@)?/, 'https://')
+    .replace(/^(https?:\/\/)[^@/]+@/, '$1')
+    .replace(/\.git$/, '')
+    .replace(/\/$/, '');
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     define: {
       API_URL: JSON.stringify(env.VITE_API_URL),
+      VCS_REPOSITORY_URL: JSON.stringify(
+        normalizeRemote(git('remote get-url origin')),
+      ),
+      VCS_REVISION: JSON.stringify(git('rev-parse HEAD')),
     },
     server: {
       open: true,
