@@ -177,4 +177,4 @@ Give the user: the consolidated PR URL, the packages upgraded (from → to), the
 
 `.github/workflows/dependabot-consolidate.yml` runs this skill every Wednesday at 08:00 UTC (and on manual `workflow_dispatch`). It skips the run when there are no open Dependabot PRs and explicitly forbids `gh pr merge`.
 
-Requirements: repo secret `ANTHROPIC_API_KEY`. Optional secret `DEPENDABOT_PR_TOKEN` (a PAT): PRs opened with the default `GITHUB_TOKEN` don't trigger the CI workflow, so use a PAT if you want CI to run on the consolidated PR.
+Requirements: repo secret `CLAUDE_CODE_OAUTH_TOKEN` (generate with `claude setup-token`; it uses the Claude subscription, no API billing). Optional secret `DEPENDABOT_PR_TOKEN` (a PAT): PRs opened with the default `GITHUB_TOKEN` don't trigger the CI workflow, so use a PAT if you want CI to run on the consolidated PR.
