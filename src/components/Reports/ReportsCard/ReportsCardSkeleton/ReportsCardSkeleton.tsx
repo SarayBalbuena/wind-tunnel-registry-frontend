@@ -6,7 +6,6 @@ import styles from './ReportsCardSkeleton.module.css';
 export const ReportsCardSkeleton = () => {
   const containerClasses = getClassNames({
     [cardStyles.reportsCard]: true,
-    [styles.reportsCardSkeleton]: true,
   });
 
   return (

@@ -110,25 +110,39 @@ const Note = ({ note }: EntriesCardNoteProps) => {
   return <p className={styles.note}>{note}</p>;
 };
 
+// Rounded tinted icon buttons that lift slightly on hover
+const actionButtonStyles = {
+  borderRadius: 'lg',
+  transition: 'transform 150ms ease, background 150ms ease',
+  _hover: { transform: 'translateY(-1px)' },
+  _active: { transform: 'translateY(0)' },
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    _hover: { transform: 'none' },
+  },
+};
+
 const Footer = ({ onEdit, onDelete, date }: EntriesCardFooterProps) => (
   <Flex justify="space-between" align="center" gap="3" mt="auto">
     <span className={styles.date}>{date}</span>
     <Flex gap="1">
       <IconButton
-        variant="ghost"
+        variant="subtle"
         colorPalette="blue"
         onClick={onEdit}
         aria-label={`Edit flight from ${date}`}
         size="sm"
+        {...actionButtonStyles}
       >
         <HiOutlinePencil />
       </IconButton>
       <IconButton
-        variant="ghost"
+        variant="subtle"
         colorPalette="red"
         onClick={onDelete}
         aria-label={`Delete flight from ${date}`}
         size="sm"
+        {...actionButtonStyles}
       >
         <HiOutlineTrash />
       </IconButton>

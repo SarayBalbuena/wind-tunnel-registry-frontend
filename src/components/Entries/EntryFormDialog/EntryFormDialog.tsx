@@ -13,7 +13,11 @@ import { Controller } from 'react-hook-form';
 import { ENTRY_FORM_ID, entryFormRules } from './EntryFormDialog.helpers.ts';
 import {
   entryDialogBackdropStyles,
+  entryDialogCancelButtonStyles,
   entryDialogContentStyles,
+  entryDialogFooterStyles,
+  entryDialogHeaderStyles,
+  entryDialogSubmitButtonStyles,
   entryFieldStyles,
   entrySelectContentStyles,
 } from './EntryFormDialog.styles.ts';
@@ -54,7 +58,7 @@ export const EntryFormDialog = ({
       open={open}
       onOpenChange={onOpenChange}
       onCancel={() => onOpenChange({ open: false })}
-      title={mode === 'create' ? 'CREATE ENTRY' : 'EDIT ENTRY'}
+      title={mode === 'create' ? 'Create entry' : 'Edit entry'}
       submitText={mode === 'create' ? 'Create' : 'Save'}
       cancelText="Cancel"
       isLoading={isLoading}
@@ -62,6 +66,10 @@ export const EntryFormDialog = ({
       submitFormId={ENTRY_FORM_ID}
       backdropProps={entryDialogBackdropStyles}
       contentProps={entryDialogContentStyles}
+      headerProps={entryDialogHeaderStyles}
+      footerProps={entryDialogFooterStyles}
+      submitButtonProps={entryDialogSubmitButtonStyles}
+      cancelButtonProps={entryDialogCancelButtonStyles}
     >
       <form id={ENTRY_FORM_ID} onSubmit={submitForm}>
         <VStack gap="4" align="stretch">
