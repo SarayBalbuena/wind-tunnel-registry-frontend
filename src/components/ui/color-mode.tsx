@@ -16,7 +16,15 @@ export interface ColorModeProviderProps extends ThemeProviderProps {}
 
 export function ColorModeProvider(props: ColorModeProviderProps) {
   return (
-    <ThemeProvider attribute="class" disableTransitionOnChange {...props} />
+    <ThemeProvider
+      attribute="class"
+      disableTransitionOnChange
+      // next-themes renders an inline <script>; React 19 warns about scripts
+      // rendered on the client, where they never execute anyway (client-only
+      // SPA). A non-JS type marks it as a data block and silences the warning.
+      scriptProps={{ type: 'application/json' }}
+      {...props}
+    />
   );
 }
 
