@@ -1,0 +1,209 @@
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+  padding: 40px 0 32px;
+}
+
+/* Slow drifting airflow lines behind the hero */
+.air {
+  position: absolute;
+  inset: -40px -40px auto -40px;
+  width: calc(100% + 80px);
+  height: 640px;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.air path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 6 14;
+  animation: drift 14s linear infinite;
+}
+
+.air path:nth-child(1) {
+  stroke: var(--chakra-colors-session-individual-accent);
+}
+
+.air path:nth-child(2) {
+  stroke: var(--chakra-colors-session-shared-accent);
+  animation-duration: 18s;
+}
+
+.air path:nth-child(3) {
+  stroke: var(--chakra-colors-session-total-accent);
+  animation-duration: 22s;
+}
+
+.air path:nth-child(4) {
+  stroke: var(--chakra-colors-session-individual-accent);
+  animation-duration: 26s;
+}
+
+@keyframes drift {
+  to {
+    stroke-dashoffset: -400;
+  }
+}
+
+.copy,
+.hero > :last-child {
+  position: relative;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--chakra-colors-session-total-fg);
+  background: color-mix(
+    in srgb,
+    var(--chakra-colors-session-total-accent) 14%,
+    var(--chakra-colors-surface-card)
+  );
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--chakra-colors-session-total-accent) 30%,
+      transparent
+    );
+}
+
+.eyebrow i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--chakra-colors-session-total-accent);
+}
+
+.headline {
+  margin: 18px 0 16px;
+  font-size: clamp(36px, 5.2vw, 60px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.headline em {
+  font-style: normal;
+  color: transparent;
+  background: linear-gradient(
+    100deg,
+    var(--chakra-colors-session-individual-accent),
+    var(--chakra-colors-session-shared-accent)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.lead {
+  margin: 0 0 26px;
+  max-width: 46ch;
+  font-size: 18px;
+  color: var(--chakra-colors-fg-muted);
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.fine {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--chakra-colors-fg-subtle);
+}
+
+/* --- Variants: totals chips --- */
+.total {
+  --accent: var(--chakra-colors-session-total-accent);
+  --value-color: var(--chakra-colors-session-total-fg);
+}
+
+.individual {
+  --accent: var(--chakra-colors-session-individual-accent);
+  --value-color: var(--chakra-colors-session-individual-fg);
+}
+
+.shared {
+  --accent: var(--chakra-colors-session-shared-accent);
+  --value-color: var(--chakra-colors-session-shared-fg);
+}
+
+.totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 22px;
+}
+
+.chip {
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: color-mix(
+    in srgb,
+    var(--accent) 12%,
+    var(--chakra-colors-surface-card)
+  );
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.chip small {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--value-color);
+}
+
+.chip b {
+  font-size: 24px;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--value-color);
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 24px 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lead {
+    font-size: 16px;
+  }
+
+  .totals {
+    gap: 8px;
+  }
+
+  .chip {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 8px 10px;
+  }
+
+  .chip b {
+    display: block;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .air path {
+    animation: none;
+  }
+}

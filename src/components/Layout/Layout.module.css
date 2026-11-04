@@ -53,6 +53,7 @@
     ),
     var(--chakra-colors-surface-page);
   background-attachment: fixed;
+  overflow-x: clip;
   min-height: calc(100vh - 49px);
   padding: 40px;
 }
