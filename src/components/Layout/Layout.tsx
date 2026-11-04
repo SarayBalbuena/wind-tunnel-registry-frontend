@@ -3,8 +3,10 @@ import { Button, Link as ChakraLink, Heading, Icon } from '@chakra-ui/react';
 import { EntryFormDialog } from '@components/Entries/EntryFormDialog/EntryFormDialog.tsx';
 import { UserMenu } from '@components/UserMenu/UserMenu.tsx';
 import { ColorModeButton } from '@components/ui/color-mode';
+import { Toaster } from '@components/ui/toaster';
 import { useAuth } from '@hooks/useAuth/useAuth.ts';
 import { useDashboardData } from '@hooks/useDashboard/useDashboard.ts';
+import { useDashboardShortcuts } from '@hooks/useDashboardShortcuts/useDashboardShortcuts.ts';
 import { useDashboardUI } from '@hooks/useDashboardUI/useDashboardUI.ts';
 import {
   type CreateEntryPayload,
@@ -25,6 +27,8 @@ export const Layout = () => {
     openCreateEntryModal,
     closeEntryFormModal,
   } = useDashboardUI();
+
+  useDashboardShortcuts();
 
   const handleSubmit = async (
     payload: CreateEntryPayload | UpdateEntryPayload,
@@ -66,9 +70,11 @@ export const Layout = () => {
                 minW={{ base: '30px', sm: 'auto' }}
                 h={{ base: '28px', md: '30px' }}
                 aria-label="Create new entry"
+                aria-keyshortcuts="N"
               >
                 <Icon as={LuPlus} boxSize={{ base: 3.5, md: 4 }} />
                 <span className={styles.createButtonText}>New entry</span>
+                <kbd className={styles.shortcutHint}>N</kbd>
               </Button>
             )}
 
@@ -80,6 +86,8 @@ export const Layout = () => {
       <main className={styles.mainContainer}>
         <Outlet />
       </main>
+
+      <Toaster />
 
       <EntryFormDialog
         open={isEntryFormOpen}

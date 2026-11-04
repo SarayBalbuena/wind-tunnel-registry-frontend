@@ -1,17 +1,27 @@
+import { type KeyboardEvent } from 'react';
 import {
-  createListCollection,
+  Button,
   Field,
+  Flex,
   Input,
-  Portal,
-  Select,
+  Text,
   Textarea,
   VStack,
 } from '@chakra-ui/react';
 import { FormDialog } from '@components/ui/form-dialog.tsx';
 import { useEntryForm } from '@hooks/useEntryForm/useEntryForm.ts';
+import { type EntryType } from '@services/entriesService/entries.service.types.ts';
 import { Controller } from 'react-hook-form';
-import { ENTRY_FORM_ID, entryFormRules } from './EntryFormDialog.helpers.ts';
 import {
+  ENTRY_FORM_ID,
+  entryFormRules,
+  getLocalDateISO,
+  MAX_MINUTES,
+  MINUTES_INPUT_ID,
+  MINUTES_PRESETS,
+} from './EntryFormDialog.helpers.ts';
+import {
+  entryChipStyles,
   entryDialogBackdropStyles,
   entryDialogCancelButtonStyles,
   entryDialogContentStyles,
@@ -19,19 +29,25 @@ import {
   entryDialogHeaderStyles,
   entryDialogSubmitButtonStyles,
   entryFieldStyles,
-  entrySelectContentStyles,
 } from './EntryFormDialog.styles.ts';
 import {
   type EntryFormDialogProps,
   type EntryFormValues,
 } from './EntryFormDialog.types.ts';
 
-const entryTypeCollection = createListCollection({
-  items: [
-    { label: '1-on-1', value: 'INDIVIDUAL' },
-    { label: 'Group', value: 'SHARED' },
-  ],
-});
+const TYPE_OPTIONS: {
+  value: EntryType;
+  label: string;
+  colorPalette: 'blue' | 'purple';
+}[] = [
+  { value: 'INDIVIDUAL', label: '1-on-1', colorPalette: 'blue' },
+  { value: 'SHARED', label: 'Group', colorPalette: 'purple' },
+];
+
+const DAY_SHORTCUTS = [
+  { label: 'Today', daysAgo: 0 },
+  { label: 'Yesterday', daysAgo: 1 },
+];
 
 export const EntryFormDialog = ({
   open,
@@ -44,7 +60,10 @@ export const EntryFormDialog = ({
   const {
     control,
     register,
+    watch,
+    setValue,
     submitForm,
+    lastEntryType,
     formState: { errors },
   } = useEntryForm({
     open,
@@ -53,12 +72,31 @@ export const EntryFormDialog = ({
     onSubmit,
   });
 
+  const selectedMinutes = Number(watch('minutes'));
+  const selectedDate = watch('date');
+
+  const setFieldValue = (
+    name: 'minutes' | 'date',
+    value: EntryFormValues[typeof name],
+  ) => {
+    setValue(name, value as never, { shouldValidate: true, shouldDirty: true });
+  };
+
+  // Ctrl/Cmd + Enter saves from any field
+  const handleFormKeyDown = (event: KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+      void submitForm();
+    }
+  };
+
   return (
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
       onCancel={() => onOpenChange({ open: false })}
       title={mode === 'create' ? 'Create entry' : 'Edit entry'}
+      initialFocusEl={() => document.getElementById(MINUTES_INPUT_ID)}
       submitText={mode === 'create' ? 'Create' : 'Save'}
       cancelText="Cancel"
       isLoading={isLoading}
@@ -71,7 +109,11 @@ export const EntryFormDialog = ({
       submitButtonProps={entryDialogSubmitButtonStyles}
       cancelButtonProps={entryDialogCancelButtonStyles}
     >
-      <form id={ENTRY_FORM_ID} onSubmit={submitForm}>
+      <form
+        id={ENTRY_FORM_ID}
+        onSubmit={submitForm}
+        onKeyDown={handleFormKeyDown}
+      >
         <VStack gap="4" align="stretch">
           <Field.Root invalid={!!errors.type}>
             <Field.Label>Type</Field.Label>
@@ -80,36 +122,38 @@ export const EntryFormDialog = ({
               control={control}
               rules={entryFormRules.type}
               render={({ field }) => (
-                <Select.Root
-                  collection={entryTypeCollection}
-                  value={field.value ? [field.value] : []}
-                  onValueChange={({ value }) =>
-                    field.onChange(value[0] as EntryFormValues['type'])
-                  }
-                >
-                  <Select.HiddenSelect name={field.name} />
-                  <Select.Control>
-                    <Select.Trigger {...entryFieldStyles}>
-                      <Select.ValueText placeholder="Select type" />
-                    </Select.Trigger>
-                    <Select.IndicatorGroup>
-                      <Select.Indicator />
-                    </Select.IndicatorGroup>
-                  </Select.Control>
+                <Flex gap="2" w="full" role="group" aria-label="Type">
+                  {TYPE_OPTIONS.map((option) => {
+                    const selected = field.value === option.value;
 
-                  <Portal>
-                    <Select.Positioner>
-                      <Select.Content {...entrySelectContentStyles}>
-                        {entryTypeCollection.items.map((item) => (
-                          <Select.Item item={item} key={item.value}>
-                            {item.label}
-                            <Select.ItemIndicator />
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select.Positioner>
-                  </Portal>
-                </Select.Root>
+                    return (
+                      <Button
+                        key={option.value}
+                        type="button"
+                        flex="1"
+                        justifyContent="flex-start"
+                        borderRadius="xl"
+                        colorPalette={option.colorPalette}
+                        variant={selected ? 'subtle' : 'outline'}
+                        aria-pressed={selected}
+                        onClick={() => field.onChange(option.value)}
+                      >
+                        {option.label}
+                        {mode === 'create' &&
+                          lastEntryType === option.value && (
+                            <Text
+                              as="span"
+                              ml="auto"
+                              fontSize="xs"
+                              fontWeight="normal"
+                            >
+                              last used
+                            </Text>
+                          )}
+                      </Button>
+                    );
+                  })}
+                </Flex>
               )}
             />
             {errors.type && (
@@ -119,24 +163,72 @@ export const EntryFormDialog = ({
 
           <Field.Root invalid={!!errors.date}>
             <Field.Label>Date</Field.Label>
-            <Input
-              type="date"
-              {...entryFieldStyles}
-              {...register('date', entryFormRules.date)}
-            />
+            <Flex gap="2" wrap="wrap" align="center">
+              <Input
+                type="date"
+                w="auto"
+                {...entryFieldStyles}
+                {...register('date', entryFormRules.date)}
+              />
+              {DAY_SHORTCUTS.map((shortcut) => {
+                const value = getLocalDateISO(shortcut.daysAgo);
+
+                return (
+                  <Button
+                    key={shortcut.label}
+                    type="button"
+                    variant={selectedDate === value ? 'subtle' : 'outline'}
+                    colorPalette="blue"
+                    aria-pressed={selectedDate === value}
+                    onClick={() => setFieldValue('date', value)}
+                    {...entryChipStyles}
+                  >
+                    {shortcut.label}
+                  </Button>
+                );
+              })}
+            </Flex>
             {errors.date && (
               <Field.ErrorText>{errors.date.message}</Field.ErrorText>
             )}
           </Field.Root>
 
-          <Field.Root invalid={!!errors.minutes}>
-            <Field.Label>Minutes</Field.Label>
-            <Input
-              type="number"
-              min={1}
-              {...entryFieldStyles}
-              {...register('minutes', entryFormRules.minutes)}
-            />
+          <Field.Root
+            invalid={!!errors.minutes}
+            ids={{ control: MINUTES_INPUT_ID }}
+          >
+            <Field.Label>
+              Minutes
+              <Text as="span" ml="2" fontWeight="normal" color="fg.muted">
+                pick a common length or type your own
+              </Text>
+            </Field.Label>
+            <Flex gap="2" wrap="wrap" align="center">
+              {MINUTES_PRESETS.map((preset) => (
+                <Button
+                  key={preset}
+                  type="button"
+                  variant={selectedMinutes === preset ? 'subtle' : 'outline'}
+                  colorPalette="blue"
+                  aria-pressed={selectedMinutes === preset}
+                  onClick={() => setFieldValue('minutes', preset)}
+                  {...entryChipStyles}
+                >
+                  {preset}
+                </Button>
+              ))}
+              <Input
+                type="number"
+                min={1}
+                max={MAX_MINUTES}
+                inputMode="numeric"
+                w="24"
+                aria-label="Minutes"
+                {...entryFieldStyles}
+                {...register('minutes', entryFormRules.minutes)}
+                onFocus={(event) => event.currentTarget.select()}
+              />
+            </Flex>
             {errors.minutes && (
               <Field.ErrorText>{errors.minutes.message}</Field.ErrorText>
             )}
@@ -145,7 +237,7 @@ export const EntryFormDialog = ({
           <Field.Root invalid={!!errors.note}>
             <Field.Label>Note</Field.Label>
             <Textarea
-              minH="120px"
+              minH="100px"
               resize="vertical"
               {...entryFieldStyles}
               {...register('note', entryFormRules.note)}

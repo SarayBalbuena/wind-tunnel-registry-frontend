@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { Entries } from '@components/Entries/Entries.tsx';
+import { Toaster } from '@components/ui/toaster.tsx';
 import { fireEvent, within } from '@testing-library/react';
 import { ENTRIES_MOCK } from '@tests/mocks/entries/entriesMock.ts';
 import { REPORTS_MOCK } from '@tests/mocks/reports/reportsMock.ts';
@@ -225,6 +226,54 @@ describe('Entries', () => {
       expect(probe).not.toHaveTextContent('type=');
       expect(probe).not.toHaveTextContent('q=');
       expect(probe).toHaveTextContent('sort=oldest');
+    });
+  });
+
+  describe('when deleting an entry', () => {
+    it('should delete it right away and offer an undo that creates it again', async () => {
+      const deletedIds: string[] = [];
+      const createdPayloads: unknown[] = [];
+      server.use(
+        http.delete(`${API_URL}/entries/:id`, ({ params }) => {
+          deletedIds.push(String(params.id));
+          return HttpResponse.json({ ok: true });
+        }),
+        http.post(`${API_URL}/entries`, async ({ request }) => {
+          createdPayloads.push(await request.json());
+          return HttpResponse.json({ id: 'again' }, { status: 201 });
+        }),
+      );
+
+      render(
+        <>
+          <Entries />
+          <Toaster />
+        </>,
+      );
+
+      fireEvent.click(
+        (
+          await screen.findAllByRole('button', {
+            name: /delete flight from 2026-03-10/i,
+          })
+        )[0],
+      );
+
+      expect(await screen.findByText('Entry deleted')).toBeInTheDocument();
+      expect(deletedIds).toEqual(['69ae9c09cf10b8ae3ceed4ae']);
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Undo' }));
+
+      await waitFor(() =>
+        expect(createdPayloads).toEqual([
+          {
+            type: 'SHARED',
+            date: '2026-03-10',
+            minutes: 15,
+            note: 'Session 2',
+          },
+        ]),
+      );
     });
   });
 });
