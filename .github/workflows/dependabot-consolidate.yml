@@ -1,0 +1,79 @@
+name: Weekly Dependabot Consolidation
+
+# Every Wednesday, run the `consolidate-dependabot` Claude skill: it combines all
+# open Dependabot PRs into ONE PR, fixes what the upgrades break, and closes the
+# originals. The consolidated PR is never merged automatically.
+on:
+  schedule:
+    - cron: '0 8 * * 3' # Wednesdays, 08:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: dependabot-consolidate
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      count: ${{ steps.count.outputs.count }}
+    steps:
+      - name: Count open Dependabot PRs
+        id: count
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          count=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open \
+            --author "app/dependabot" --json number --jq 'length')
+          echo "Open Dependabot PRs: $count"
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+
+  consolidate:
+    needs: check
+    if: ${{ needs.check.outputs.count != '0' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run consolidate-dependabot skill
+        uses: anthropics/claude-code-action@v1
+        env:
+          GH_TOKEN: ${{ secrets.DEPENDABOT_PR_TOKEN || github.token }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.DEPENDABOT_PR_TOKEN || github.token }}
+          prompt: |
+            /consolidate-dependabot
+
+            Running unattended in GitHub Actions: do not ask questions, make the
+            decisions the skill describes. NEVER merge the consolidated PR and
+            never enable auto-merge.
+          claude_args: |
+            --max-turns 60
+            --allowedTools "Bash(git:*),Bash(gh:*),Bash(pnpm:*),Bash(python3:*),Bash(date:*),Read,Edit,Write,Glob,Grep,Skill"
+            --disallowedTools "Bash(gh pr merge:*),Bash(gh api:*)"
