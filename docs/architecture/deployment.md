@@ -26,6 +26,9 @@ The backend sets a `SameSite=None` session cookie. If the frontend called the Ko
 | --- | --- |
 | `FRONTEND_URL` | `https://<app>.vercel.app` |
 | `GOOGLE_CALLBACK_URL` | `https://<app>.vercel.app/api/auth/google/callback` |
+| `MAGIC_LINK_CALLBACK_URL` | `https://<app>.vercel.app/api/auth/magic-link/callback` |
+
+`MAGIC_LINK_CALLBACK_URL` must go through the Vercel domain too. If it points at Koyeb directly, the session cookie is set on the Koyeb host and `/api/auth/session` returns 401 right after clicking the emailed link.
 
 **Google Cloud Console:** add the same callback URL under "Authorized redirect URIs" of the OAuth client.
 
