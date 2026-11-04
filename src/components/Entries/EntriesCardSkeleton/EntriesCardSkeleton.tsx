@@ -1,4 +1,4 @@
-import { Flex, Separator, Skeleton } from '@chakra-ui/react';
+import { Flex, Skeleton } from '@chakra-ui/react';
 import styles from '../EntriesCard/EntriesCard.module.css';
 
 export const EntriesCardSkeleton = () => {
@@ -6,20 +6,15 @@ export const EntriesCardSkeleton = () => {
     <div className={styles.entriesCard}>
       <div className={styles.header}>
         <Skeleton height="24px" width="80px" borderRadius="full" />
-        <Skeleton height="20px" width="60px" />
+        <Skeleton height="16px" width="90px" />
       </div>
-      <Separator aria-hidden="true" />
       <div className={styles.content}>
-        <Skeleton height="16px" flex="1" />
-      </div>
-      <Separator aria-hidden="true" />
-      <Flex justify="space-between" align="center" gap="3" mt="auto">
-        <Skeleton height="16px" width="100px" />
+        <Skeleton height="26px" width="70px" />
         <Flex gap="1">
-          <Skeleton height="32px" width="32px" borderRadius="md" />
-          <Skeleton height="32px" width="32px" borderRadius="md" />
+          <Skeleton height="32px" width="32px" borderRadius="lg" />
+          <Skeleton height="32px" width="32px" borderRadius="lg" />
         </Flex>
-      </Flex>
+      </div>
     </div>
   );
 };

@@ -2,13 +2,15 @@
   padding-top: 16px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 8px;
 }
 
-.entriesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: 16px;
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .title {
@@ -17,17 +19,8 @@
   color: var(--chakra-colors-fg);
 }
 
-.loading,
-.error {
-  padding: 40px;
-  text-align: center;
-  color: var(--chakra-colors-fg-subtle);
-}
-
-.empty {
-  color: var(--chakra-colors-fg);
-}
-
-.error {
-  color: var(--chakra-colors-red-500);
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }

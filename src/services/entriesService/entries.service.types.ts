@@ -1,5 +1,13 @@
 export type EntryType = 'INDIVIDUAL' | 'SHARED';
 
+export type EntryTypeFilter = EntryType | 'ALL';
+
+/** Query params supported by `GET /entries` (exact type and exact date). */
+export interface EntriesQuery {
+  type?: EntryType;
+  date?: string;
+}
+
 export interface Entry {
   id: string;
   type: EntryType;

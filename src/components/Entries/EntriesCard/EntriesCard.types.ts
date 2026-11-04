@@ -30,7 +30,7 @@ export interface EntriesCardNoteProps {
   note: string;
 }
 
-export interface EntriesCardFooterProps {
+export interface EntriesCardActionsProps {
   onEdit: () => void;
   onDelete: () => void;
   date: string;

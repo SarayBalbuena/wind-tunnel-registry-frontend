@@ -35,21 +35,27 @@ authService/
 
 **Queries**
 
+Filters (`type`, `date`) live in the URL (`useEntriesFilters`, e.g. `?type=SHARED&date=2026-03-09`), are sent to the backend as query params and are part of the SWR key (`[ENTRIES_KEY, type, date]`):
+
 ```ts
 export const ENTRIES_KEY = 'entries';
+export const isEntriesKey = (key: unknown) =>
+  Array.isArray(key) && key[0] === ENTRIES_KEY;
 
-export const useEntries = () => {
+export const useEntries = (query: EntriesQuery = {}) => {
   const { isAuthenticated } = useAuth();
   const { data, isLoading, error, mutate } = useSWR(
-    isAuthenticated ? ENTRIES_KEY : null,   // gate on auth
-    getEntries,
+    isAuthenticated ? ([ENTRIES_KEY, query.type ?? '', query.date ?? ''] as const) : null, // gate on auth
+    ([, type, date]) => getEntries({ type: type || undefined, date: date || undefined }),
     { revalidateOnFocus: false, keepPreviousData: true },
   );
   return { entries: data, isLoading, error, mutateEntries: mutate };
 };
 ```
 
-**Mutations** use `useSWRMutation` on the **same key** as the query, so SWR revalidates the list automatically after `trigger`:
+The same applies to `useFlightDetails(date)` (`[FLIGHT_DETAILS_KEY, date]`).
+
+**Mutations** use `useSWRMutation` for the loading/error state. Because the query keys include the filters, `DashboardDataContext` revalidates every cached combination after each mutation with `useSWRConfig().mutate(isEntriesKey)` and `mutate(isFlightDetailsKey)`:
 
 ```ts
 const { trigger, isMutating, error } = useSWRMutation(
@@ -58,6 +64,8 @@ const { trigger, isMutating, error } = useSWRMutation(
 );
 return { createEntry: trigger, isCreatingEntry: isMutating, createEntryError: error };
 ```
+
+Backend filters available today: `GET /entries?type=INDIVIDUAL|SHARED&date=YYYY-MM-DD` and `GET /reports/total-by-type?date=YYYY-MM-DD` (exact values, no ranges). Search, sorting and month grouping are done on the client in `components/Entries/Entries.helpers.ts`.
 
 Conventions:
 - Export the cache key as a constant (`ENTRIES_KEY`, `FLIGHT_DETAILS_KEY`); never hardcode it twice.

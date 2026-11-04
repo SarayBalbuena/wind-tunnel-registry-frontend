@@ -1,13 +1,21 @@
 import { apiFetch } from '@services/utils/apiFetch';
 import {
   type CreateEntryPayload,
+  type EntriesQuery,
   type EntriesResponse,
   type Entry,
   type UpdateEntryPayload,
 } from './entries.service.types';
 
-export const getEntries = async (): Promise<EntriesResponse> => {
-  return await apiFetch('/entries');
+export const getEntries = async (
+  query: EntriesQuery = {},
+): Promise<EntriesResponse> => {
+  const params = new URLSearchParams();
+  if (query.type) params.set('type', query.type);
+  if (query.date) params.set('date', query.date);
+  const queryString = params.toString();
+
+  return await apiFetch(`/entries${queryString ? `?${queryString}` : ''}`);
 };
 
 export const createEntry = async (

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Badge, Flex, Icon, IconButton } from '@chakra-ui/react';
+import { formatEntryDate } from '@components/Entries/Entries.helpers.ts';
 import {
+  type EntriesCardActionsProps,
   type EntriesCardContentProps,
   type EntriesCardDateProps,
-  type EntriesCardFooterProps,
   type EntriesCardHeaderProps,
   type EntriesCardMinutesProps,
   type EntriesCardNoteProps,
@@ -18,7 +19,6 @@ import {
   HiOutlineUser,
   HiOutlineUsers,
 } from 'react-icons/hi2';
-import { LuClock } from 'react-icons/lu';
 import styles from './EntriesCard.module.css';
 
 export const EntriesCard = ({ children, className }: EntriesCardProps) => {
@@ -34,7 +34,9 @@ const Header = ({ children }: EntriesCardHeaderProps) => (
 );
 
 const EntryDate = ({ date }: EntriesCardDateProps) => (
-  <span className={styles.date}>{date}</span>
+  <time className={styles.date} dateTime={date}>
+    {formatEntryDate(date)}
+  </time>
 );
 
 const TYPE_CONFIG: Record<
@@ -84,23 +86,13 @@ const Content = ({ children }: EntriesCardContentProps) => (
 const Minutes = ({ minutes }: EntriesCardMinutesProps) => {
   const timeParts = getTimeParts(minutes);
   return (
-    <div className={styles.minutesContainer}>
-      <div className={styles.timeWrapper}>
-        <Icon
-          as={LuClock}
-          boxSize="16px"
-          color="gray.500"
-          _dark={{ color: 'gray.400' }}
-        />
-        <div className={styles.timeValues}>
-          {timeParts.map((part) => (
-            <React.Fragment key={`${part.value}-${part.unit}`}>
-              <span className={styles.minutesValue}>{part.value}</span>
-              <span className={styles.minutesUnit}>{part.unit}</span>
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
+    <div className={styles.timeValues}>
+      {timeParts.map((part) => (
+        <React.Fragment key={`${part.value}-${part.unit}`}>
+          <span className={styles.minutesValue}>{part.value}</span>
+          <span className={styles.minutesUnit}>{part.unit}</span>
+        </React.Fragment>
+      ))}
     </div>
   );
 };
@@ -122,31 +114,29 @@ const actionButtonStyles = {
   },
 };
 
-const Footer = ({ onEdit, onDelete, date }: EntriesCardFooterProps) => (
-  <Flex justify="space-between" align="center" gap="3" mt="auto">
-    <span className={styles.date}>{date}</span>
-    <Flex gap="1">
-      <IconButton
-        variant="subtle"
-        colorPalette="blue"
-        onClick={onEdit}
-        aria-label={`Edit flight from ${date}`}
-        size="sm"
-        {...actionButtonStyles}
-      >
-        <HiOutlinePencil />
-      </IconButton>
-      <IconButton
-        variant="subtle"
-        colorPalette="red"
-        onClick={onDelete}
-        aria-label={`Delete flight from ${date}`}
-        size="sm"
-        {...actionButtonStyles}
-      >
-        <HiOutlineTrash />
-      </IconButton>
-    </Flex>
+// Hidden until hover or keyboard focus on pointer devices (see the CSS module)
+const Actions = ({ onEdit, onDelete, date }: EntriesCardActionsProps) => (
+  <Flex gap="1" className={styles.actions}>
+    <IconButton
+      variant="subtle"
+      colorPalette="blue"
+      onClick={onEdit}
+      aria-label={`Edit flight from ${date}`}
+      size="sm"
+      {...actionButtonStyles}
+    >
+      <HiOutlinePencil />
+    </IconButton>
+    <IconButton
+      variant="subtle"
+      colorPalette="red"
+      onClick={onDelete}
+      aria-label={`Delete flight from ${date}`}
+      size="sm"
+      {...actionButtonStyles}
+    >
+      <HiOutlineTrash />
+    </IconButton>
   </Flex>
 );
 
@@ -156,4 +146,4 @@ EntriesCard.Type = Type;
 EntriesCard.Content = Content;
 EntriesCard.Minutes = Minutes;
 EntriesCard.Note = Note;
-EntriesCard.Footer = Footer;
+EntriesCard.Actions = Actions;

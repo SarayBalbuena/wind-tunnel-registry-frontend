@@ -1,0 +1,80 @@
+.state {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 44px 20px;
+  text-align: center;
+  border-radius: 16px;
+  border: 1px dashed
+    color-mix(in srgb, var(--chakra-colors-blue-500) 35%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--chakra-colors-blue-500) 5%,
+    var(--chakra-colors-surface-card)
+  );
+}
+
+.error {
+  border-color: color-mix(
+    in srgb,
+    var(--chakra-colors-red-500) 40%,
+    transparent
+  );
+  background: color-mix(
+    in srgb,
+    var(--chakra-colors-red-500) 6%,
+    var(--chakra-colors-surface-card)
+  );
+}
+
+.art {
+  width: 88px;
+  height: 64px;
+}
+
+.art path {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 4 8;
+  animation: drift 10s linear infinite;
+}
+
+.art path:nth-child(1) {
+  stroke: var(--chakra-colors-session-individual-accent);
+}
+
+.art path:nth-child(2) {
+  stroke: var(--chakra-colors-session-shared-accent);
+}
+
+.art path:nth-child(3) {
+  stroke: var(--chakra-colors-session-total-accent);
+}
+
+@keyframes drift {
+  to {
+    stroke-dashoffset: -200;
+  }
+}
+
+.title {
+  margin: 6px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--chakra-colors-fg);
+}
+
+.text {
+  margin: 0 0 6px;
+  max-width: 44ch;
+  color: var(--chakra-colors-fg-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art path {
+    animation: none;
+  }
+}

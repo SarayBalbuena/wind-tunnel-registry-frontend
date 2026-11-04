@@ -5,6 +5,7 @@
 | Server data | SWR cache (via hooks) | entries, reports, session |
 | Shared server data + side effects | `DashboardDataContext` | `createEntry` also revalidates reports |
 | Shared UI state | `DashboardUIContext` (`useReducer`) | entry form modal open/mode/selected |
+| State worth keeping on reload or sharing | URL search params (`useEntriesFilters`) | flight log `type`, `date`, `q` (note search) and `sort` |
 | Auth | `AuthContext` (wraps `useCheckSession`) | `isAuthenticated`, `name`, `loading` |
 | Form state | `react-hook-form` inside a dedicated hook | `useEntryForm` |
 | Local UI state | `useState` in the component | `entryToDelete` in `Entries` |
@@ -19,7 +20,7 @@ main.tsx
     AuthProvider                  src/context/AuthContext
       Provider (Chakra + theme)   src/components/ui/provider.tsx
         DashboardProviders        src/context/DashboardProviders
-          DashboardDataProvider
+          DashboardDataProvider         ← reads the filters from the URL (useEntriesFilters)
             DashboardUIProvider
               App
                 DashboardDataProvider   ← second instance (App.tsx)
