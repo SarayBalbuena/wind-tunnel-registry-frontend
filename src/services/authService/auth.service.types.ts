@@ -10,3 +10,7 @@ export interface MagicLinkRequest {
 export interface MagicLinkResponse {
   message: string;
 }
+
+export interface VerifyMagicLinkRequest {
+  token: string;
+}
