@@ -12,3 +12,5 @@ interface ImportMeta {
 }
 
 declare const API_URL: string;
+declare const VCS_REPOSITORY_URL: string;
+declare const VCS_REVISION: string;
