@@ -8,10 +8,15 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 1px solid var(--chakra-colors-border);
-  background: var(--chakra-colors-bg);
+  border-bottom: 1px solid var(--chakra-colors-surface-border);
+  background: color-mix(
+    in srgb,
+    var(--chakra-colors-surface-card) 80%,
+    transparent
+  );
   padding: 10px 16px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
 }
 
 .navContainer {
@@ -30,7 +35,24 @@
 }
 
 .mainContainer {
-  background: linear-gradient(135deg, #e0f2fe, #dbeafe, #eef2ff);
+  background:
+    radial-gradient(
+      50% 45% at 0% 0%,
+      color-mix(in srgb, var(--chakra-colors-blue-500) 28%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      50% 45% at 100% 10%,
+      color-mix(in srgb, var(--chakra-colors-purple-500) 24%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      45% 40% at 50% 100%,
+      color-mix(in srgb, var(--chakra-colors-teal-500) 16%, transparent),
+      transparent
+    ),
+    var(--chakra-colors-surface-page);
+  background-attachment: fixed;
   min-height: calc(100vh - 49px);
   padding: 40px;
 }
@@ -60,10 +82,6 @@
   .createButtonText {
     display: none;
   }
-}
-
-:global(.dark) .mainContainer {
-  background: linear-gradient(to bottom right, #243045, #1e3a8a, #243045);
 }
 
 @media (min-width: 481px) {

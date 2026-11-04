@@ -59,6 +59,7 @@ export const Layout = () => {
           <div className={styles.navRight}>
             {isAuthenticated && (
               <Button
+                colorPalette="blue"
                 onClick={openCreateEntryModal}
                 size="xs"
                 px={{ base: 2, sm: 2.5 }}

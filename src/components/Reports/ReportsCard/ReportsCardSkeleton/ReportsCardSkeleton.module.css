@@ -1,37 +1,27 @@
-.reportsCardSkeleton {
-  --card-bg: var(--chakra-colors-white);
-  --card-border: var(--chakra-colors-border);
-}
-
-:global(.dark) .reportsCardSkeleton {
-  --card-bg: var(--chakra-colors-bg-panel);
-  --card-border: var(--chakra-colors-border);
-}
-
 .skeletonLabel {
-  height: 24px;
+  height: 14px;
 }
 .skeletonDescription {
-  height: 16px;
+  height: 14px;
 }
 .skeletonValue {
-  height: 36px;
+  height: 48px;
 }
 .skeletonUnit {
-  height: 20px;
+  height: 16px;
 }
 
 @media (max-width: 480px) {
   .skeletonLabel {
-    height: 14px;
+    height: 12px;
   }
   .skeletonDescription {
     display: none;
   }
   .skeletonValue {
-    height: 24px;
+    height: 28px;
   }
   .skeletonUnit {
-    height: 14px;
+    height: 12px;
   }
 }

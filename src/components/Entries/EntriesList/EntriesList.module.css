@@ -21,7 +21,7 @@
 .error {
   padding: 40px;
   text-align: center;
-  color: var(--chakra-colors);
+  color: var(--chakra-colors-fg-subtle);
 }
 
 .empty {

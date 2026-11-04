@@ -12,7 +12,7 @@ Don't use inline `style={{}}`, emotion `css`, or global CSS.
 
 ## Tokens
 
-The theme is Chakra's `defaultSystem` (no custom theme file yet). In CSS, reference Chakra CSS variables:
+The theme lives in `src/theme.ts` (Chakra `createSystem` on top of the defaults, Inter font). It adds semantic tokens that switch automatically in dark mode: `surface.page|card|border`, `session.individual|shared|total.fg|accent|subtle`, the `card` shadow and the `card` radius. In CSS, reference Chakra CSS variables:
 
 ```css
 color: var(--chakra-colors-fg);
@@ -31,18 +31,18 @@ Prefer semantic tokens (`fg`, `fg.muted`, `bg`, `border`) — they switch automa
 | --- | --- |
 | Individual / 1-on-1 | `blue` |
 | Shared / Group | `purple` |
-| Total / neutral | `fg` / gray |
+| Total | `teal` |
 | Destructive | `red` |
 | Focus ring | `blue.400` (light) / `blue.300` (dark) |
 
-## Visual style: "glass"
+## Visual style: tinted flat cards
 
-Cards and dialogs use a frosted-glass look:
-- vertical `linear-gradient(180deg, top, bottom)` background via local custom properties (`--card-bg-top`, `--card-bg-bottom`, `--card-border`)
-- `backdrop-filter: blur(…) saturate(140%)` with `-webkit-` prefix
-- soft layered `box-shadow` with a `inset 0 1px 0 rgba(255,255,255,.3x)` highlight
-- `border-radius`: 10–12px for cards, `xl`/`2xl` for Chakra dialogs and inputs
-- `@supports not (backdrop-filter…)` fallback with solid background
+Cards are solid, not frosted glass:
+- `surface.card` background with a `color-mix()` tint of the variant accent, a 1px tinted border and the `card` shadow
+- a 4px accent bar on the left edge (`::before` on report cards, `border-left` on entry cards)
+- `border-radius: var(--chakra-radii-card)` (14px)
+- the page background (`Layout.module.css`) has blue, purple and teal radial glows over `surface.page`
+- backdrop blur is used only on the sticky nav
 
 Variants set **CSS custom properties**, elements consume them:
 
