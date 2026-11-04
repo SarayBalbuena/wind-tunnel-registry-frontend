@@ -67,6 +67,8 @@ return { createEntry: trigger, isCreatingEntry: isMutating, createEntryError: er
 
 Backend filters available today: `GET /entries?type=INDIVIDUAL|SHARED&date=YYYY-MM-DD` and `GET /reports/total-by-type?date=YYYY-MM-DD` (exact values, no ranges). Search, sorting and month grouping are done on the client in `components/Entries/Entries.helpers.ts`.
 
+`DashboardDataContext` also exposes `allEntries`: every entry, ignoring the filters (same cache key as the list when no filter is active). The monthly chart and the "this month" trend on the report cards are computed from it on the client (`components/MonthlyChart/MonthlyChart.helpers.ts`), because the backend has no monthly aggregation endpoint.
+
 Conventions:
 - Export the cache key as a constant (`ENTRIES_KEY`, `FLIGHT_DETAILS_KEY`); never hardcode it twice.
 - Rename SWR return values to domain names (`entries`, `isCreatingEntry`, `mutateReports`).

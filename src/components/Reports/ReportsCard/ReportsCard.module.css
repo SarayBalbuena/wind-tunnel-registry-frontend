@@ -104,7 +104,18 @@
   margin-right: 6px;
 }
 
+/* Month-to-date change, e.g. "+45 min this month" */
+.reportsCardTrend {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--chakra-colors-fg-subtle);
+}
+
 @media (max-width: 480px) {
+  .reportsCardTrend {
+    display: none;
+  }
+
   .reportsCard {
     padding: 12px;
     min-width: 0;
