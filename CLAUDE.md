@@ -66,7 +66,7 @@ Deeper docs:
 
 ## Claude tooling in this repo
 
-- Skills (`.claude/skills/`): `new-component`, `new-api-resource`, `new-page`, `testing`, `create-pull-request`, plus Bluebox skills.
+- Skills (`.claude/skills/`): `new-component`, `new-api-resource`, `new-page`, `testing`, `create-pull-request`, `consolidate-dependabot`, plus Bluebox skills.
 - Agents (`.claude/agents/`): `feature-builder`, `test-writer`, `code-reviewer`, `ui-stylist`.
 
 ## Git
