@@ -5,14 +5,16 @@ import {
   type MappedFlightDetailsResponse,
 } from './reports.service.types.ts';
 
-export const getFlightDetails =
-  async (): Promise<MappedFlightDetailsResponse> => {
-    const response: FlightDetailsResponse = await apiFetch(
-      '/reports/total-by-type',
-    );
+export const getFlightDetails = async (
+  date?: string,
+): Promise<MappedFlightDetailsResponse> => {
+  const path = date
+    ? `/reports/total-by-type?date=${encodeURIComponent(date)}`
+    : '/reports/total-by-type';
+  const response: FlightDetailsResponse = await apiFetch(path);
 
-    return {
-      ...response,
-      ...getMappedReportsData(response.totalMinutes, response.flightDetails),
-    };
+  return {
+    ...response,
+    ...getMappedReportsData(response.totalMinutes, response.flightDetails),
   };
+};

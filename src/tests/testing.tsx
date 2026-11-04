@@ -39,26 +39,41 @@ const render = (
     ...options
   }: RenderOptions & { route?: string; path?: string } = {},
 ) => {
-  return rtlRender(
+  // The router sits outside the providers, like BrowserRouter in main.tsx,
+  // because some providers read the URL.
+  const RouterWrapper: FC<{ children: ReactNode }> = ({ children }) => (
     <MemoryRouter initialEntries={[route]}>
-      <Routes>
-        <Route path={path} element={ui} />
-      </Routes>
-    </MemoryRouter>,
+      <Wrapper>{children}</Wrapper>
+    </MemoryRouter>
+  );
+
+  return rtlRender(
+    <Routes>
+      <Route path={path} element={ui} />
+    </Routes>,
     {
-      wrapper: Wrapper,
+      wrapper: RouterWrapper,
       ...options,
     },
   );
 };
 
 /**
- * Renders a React hook wrapped with `SWRConfig`.
+ * Renders a React hook wrapped with `SWRConfig` and a `MemoryRouter`.
  *
  * @param hook - The React hook to test.
  */
-const renderHook = <T,>(hook: () => T) => {
-  return rtlRenderHook(() => hook(), { wrapper: Wrapper });
+const renderHook = <T,>(
+  hook: () => T,
+  { route = '/' }: { route?: string } = {},
+) => {
+  const RouterWrapper: FC<{ children: ReactNode }> = ({ children }) => (
+    <MemoryRouter initialEntries={[route]}>
+      <Wrapper>{children}</Wrapper>
+    </MemoryRouter>
+  );
+
+  return rtlRenderHook(() => hook(), { wrapper: RouterWrapper });
 };
 
 export * from '@testing-library/react';

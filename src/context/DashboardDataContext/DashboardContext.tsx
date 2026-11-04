@@ -1,9 +1,14 @@
 import { createContext, type ReactNode } from 'react';
 import { useCreateEntry } from '@hooks/useCreateEntry/useCreateEntry.ts';
 import { useDeleteEntry } from '@hooks/useDeleteEntry/useDeleteEntry';
-import { useEntries } from '@hooks/useEntries/useEntries';
-import { useFlightDetails } from '@hooks/useFlightDetails/useFlightDetails';
+import { isEntriesKey, useEntries } from '@hooks/useEntries/useEntries';
+import { useEntriesFilters } from '@hooks/useEntriesFilters/useEntriesFilters';
+import {
+  isFlightDetailsKey,
+  useFlightDetails,
+} from '@hooks/useFlightDetails/useFlightDetails';
 import { useUpdateEntry } from '@hooks/useUpdateEntry/useUpdateEntry';
+import { useSWRConfig } from 'swr';
 import { type DashboardDataContextType } from './DashboardContext.types.ts';
 
 export const DashboardDataContext = createContext<
@@ -15,18 +20,27 @@ export const DashboardDataProvider = ({
 }: {
   children: ReactNode;
 }) => {
+  const { typeFilter, dateFilter } = useEntriesFilters();
+  const { mutate } = useSWRConfig();
+
   const {
     data: reports,
     isLoading: isReportsLoading,
     error: reportsError,
-    mutateReports,
-  } = useFlightDetails();
+  } = useFlightDetails(dateFilter || undefined);
 
   const {
     entries,
     isLoading: isEntriesLoading,
     error: entriesError,
-  } = useEntries();
+  } = useEntries({
+    type: typeFilter === 'ALL' ? undefined : typeFilter,
+    date: dateFilter || undefined,
+  });
+
+  // Revalidate every cached filter combination, not only the visible one
+  const mutateEntries = () => mutate(isEntriesKey);
+  const mutateReports = () => mutate(isFlightDetailsKey);
 
   const { createEntry: createEntryMutation, isCreatingEntry } =
     useCreateEntry();
@@ -41,19 +55,19 @@ export const DashboardDataProvider = ({
     payload: Parameters<typeof createEntryMutation>[0],
   ) => {
     await createEntryMutation(payload);
-    await mutateReports();
+    await Promise.all([mutateEntries(), mutateReports()]);
   };
 
   const deleteEntry = async (id: string) => {
     await deleteEntryMutation(id);
-    await mutateReports();
+    await Promise.all([mutateEntries(), mutateReports()]);
   };
 
   const updateEntry = async (
     arg: Parameters<typeof updateEntryMutation>[0],
   ) => {
     await updateEntryMutation(arg);
-    await mutateReports();
+    await Promise.all([mutateEntries(), mutateReports()]);
   };
 
   return (
@@ -65,6 +79,7 @@ export const DashboardDataProvider = ({
         entries,
         isEntriesLoading,
         entriesError,
+        refetchEntries: mutateEntries,
         deleteEntry,
         isDeletingEntry,
         updateEntry,
