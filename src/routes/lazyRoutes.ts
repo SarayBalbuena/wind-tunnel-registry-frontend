@@ -22,3 +22,7 @@ export const Dashboard = lazyNamed(
   'Dashboard',
 );
 export const Home = lazyNamed(() => import('@pages/Home/Home.tsx'), 'Home');
+export const MagicLinkVerify = lazyNamed(
+  () => import('@pages/MagicLinkVerify/MagicLinkVerify.tsx'),
+  'MagicLinkVerify',
+);

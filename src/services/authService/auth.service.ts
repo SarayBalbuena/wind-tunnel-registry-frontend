@@ -3,6 +3,7 @@ import {
   type AuthSessionResponse,
   type MagicLinkRequest,
   type MagicLinkResponse,
+  type VerifyMagicLinkRequest,
 } from './auth.service.types';
 
 export const checkSession = (): Promise<AuthSessionResponse> =>
@@ -22,6 +23,15 @@ export const requestMagicLink = (
   { arg }: { arg: MagicLinkRequest },
 ): Promise<MagicLinkResponse> =>
   apiFetch('/auth/magic-link', {
+    method: 'POST',
+    body: JSON.stringify(arg),
+  });
+
+export const verifyMagicLink = (
+  _key: string,
+  { arg }: { arg: VerifyMagicLinkRequest },
+): Promise<AuthSessionResponse> =>
+  apiFetch('/auth/magic-link/verify', {
     method: 'POST',
     body: JSON.stringify(arg),
   });

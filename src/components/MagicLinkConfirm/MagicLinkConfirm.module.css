@@ -1,0 +1,27 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 420px;
+  margin: 80px auto;
+  padding: 24px;
+  border: 1px solid var(--chakra-colors-border-muted);
+  border-radius: 12px;
+  background: var(--chakra-colors-bg-muted);
+}
+
+:global(.dark) .card {
+  background: var(--chakra-colors-bg-subtle);
+}
+
+@media (max-width: 480px) {
+  .card {
+    margin: 32px 16px;
+  }
+
+  .card > button,
+  .card > a {
+    width: 100%;
+  }
+}

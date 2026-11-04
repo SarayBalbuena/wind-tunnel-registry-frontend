@@ -30,6 +30,8 @@ The backend sets a `SameSite=None` session cookie. If the frontend called the Ko
 
 `MAGIC_LINK_CALLBACK_URL` must go through the Vercel domain too. If it points at Koyeb directly, the session cookie is set on the Koyeb host and `/api/auth/session` returns 401 right after clicking the emailed link.
 
+**Scanner-safe magic link (once the backend exposes `POST /auth/magic-link/verify`):** set `MAGIC_LINK_CALLBACK_URL` to `https://<app>.vercel.app/auth/magic-link`. The emailed link then opens a frontend page (`/auth/magic-link?token=…`) that only logs in when the user clicks "Continue to log in", so mail scanners that prefetch the link can't use up the token. Deploy the frontend first, then the backend, then change the variable; emails sent before the switch stop working.
+
 **Google Cloud Console:** add the same callback URL under "Authorized redirect URIs" of the OAuth client.
 
 ## Notes

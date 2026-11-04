@@ -14,6 +14,9 @@ export const handlers = [
       { status: 202 },
     );
   }),
+  http.post(`${API_URL}/auth/magic-link/verify`, () => {
+    return HttpResponse.json(CHECK_SESSION_MOCK, { status: 200 });
+  }),
   http.get(`${API_URL}/auth/logout`, () => {
     return HttpResponse.json(LOGOUT_MOCK, { status: 200 });
   }),
