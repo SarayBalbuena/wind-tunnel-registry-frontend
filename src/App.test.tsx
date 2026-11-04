@@ -12,14 +12,14 @@ describe('App', () => {
       const homeTitle = await screen.findByText(
         /Track your wind tunnel flight time, add individual sessions, shared sessions and stay updated on your progress./i,
       );
-      const dashboardTitle = screen.queryByText(/Total/i);
+      const dashboardPage = screen.queryByTestId('dashboard-page');
       const dashBoardButton = await screen.findByRole('button', {
         name: /Go to dashboard/i,
       });
 
       expect(homeTitle).toBeInTheDocument();
       expect(dashBoardButton).toBeInTheDocument();
-      expect(dashboardTitle).not.toBeInTheDocument();
+      expect(dashboardPage).not.toBeInTheDocument();
     });
   });
   describe('when navigate to dashboard', async () => {

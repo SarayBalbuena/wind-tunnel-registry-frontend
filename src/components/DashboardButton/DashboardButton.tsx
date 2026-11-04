@@ -7,15 +7,9 @@ export const DashboardButton = () => {
   return (
     <Button
       onClick={() => navigate('/dashboard')}
-      bg="white"
-      color="gray.700"
-      border="1px solid"
-      borderColor="gray.200"
-      _hover={{ bg: 'gray.50' }}
-      _active={{ bg: 'gray.100' }}
+      colorPalette="blue"
       size="lg"
       rounded="md"
-      boxShadow="sm"
     >
       Go to dashboard
     </Button>
