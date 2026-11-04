@@ -13,6 +13,8 @@ export interface DashboardDataContextType {
   isEntriesLoading: boolean;
   entriesError: unknown;
   refetchEntries: () => Promise<unknown>;
+  allEntries: EntriesResponse | undefined;
+  allEntriesError: unknown;
   createEntry: (payload: CreateEntryPayload) => Promise<void>;
   isCreatingEntry: boolean;
   deleteEntry: (id: string) => Promise<void>;

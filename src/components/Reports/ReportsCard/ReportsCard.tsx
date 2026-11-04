@@ -8,6 +8,7 @@ export const ReportsCard = ({
   description,
   type = 'total',
   timeParts,
+  trend,
 }: ReportsCardProps) => {
   const containerClasses = getClassNames({
     [styles.reportsCard]: true,
@@ -27,6 +28,8 @@ export const ReportsCard = ({
           </React.Fragment>
         ))}
       </div>
+
+      {trend && <div className={styles.reportsCardTrend}>{trend}</div>}
     </div>
   );
 };

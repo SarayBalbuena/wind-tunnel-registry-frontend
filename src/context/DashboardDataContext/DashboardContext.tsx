@@ -38,6 +38,10 @@ export const DashboardDataProvider = ({
     date: dateFilter || undefined,
   });
 
+  // Every entry, ignoring the filters: feeds the monthly chart and the trends.
+  // Shares the cache key with the list when no filter is active.
+  const { entries: allEntries, error: allEntriesError } = useEntries();
+
   // Revalidate every cached filter combination, not only the visible one
   const mutateEntries = () => mutate(isEntriesKey);
   const mutateReports = () => mutate(isFlightDetailsKey);
@@ -80,6 +84,8 @@ export const DashboardDataProvider = ({
         isEntriesLoading,
         entriesError,
         refetchEntries: mutateEntries,
+        allEntries,
+        allEntriesError,
         deleteEntry,
         isDeletingEntry,
         updateEntry,
