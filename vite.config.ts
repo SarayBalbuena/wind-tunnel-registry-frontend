@@ -48,6 +48,21 @@ export default defineConfig(({ mode }) => {
       globals: true,
       environment: 'jsdom',
       setupFiles: ['./src/tests/setup.ts', './src/tests/test-globals.ts'],
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json-summary', 'json'],
+        reportsDirectory: './coverage',
+        include: ['src/**/*.{ts,tsx}'],
+        exclude: [
+          'src/**/*.test.{ts,tsx}',
+          'src/tests/**',
+          'src/components/ui/**',
+          'src/**/*.types.ts',
+          'src/**/*.d.ts',
+          'src/main.tsx',
+          'src/instrumentation.ts',
+        ],
+      },
     },
   };
 });
