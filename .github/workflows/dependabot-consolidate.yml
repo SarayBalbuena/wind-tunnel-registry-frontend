@@ -67,6 +67,8 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.DEPENDABOT_PR_TOKEN || github.token }}
+          # Temporary: reveal denied tool calls. Remove once diagnosed.
+          show_full_output: true
           prompt: |
             /consolidate-dependabot
 
@@ -74,6 +76,6 @@ jobs:
             decisions the skill describes. NEVER merge the consolidated PR and
             never enable auto-merge.
           claude_args: |
-            --max-turns 60
+            --max-turns 100
             --allowedTools "Bash(git:*),Bash(gh:*),Bash(pnpm:*),Bash(python3:*),Bash(date:*),Read,Edit,Write,Glob,Grep,Skill"
             --disallowedTools "Bash(gh pr merge:*),Bash(gh api:*)"
