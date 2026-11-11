@@ -6,6 +6,8 @@ import {
   UNDO_DURATION_MS,
 } from '@components/Entries/Entries.helpers.ts';
 import { EntriesCard } from '@components/Entries/EntriesCard/EntriesCard.tsx';
+import { EntriesCsvActions } from '@components/Entries/EntriesCsvActions/EntriesCsvActions.tsx';
+import { EntriesCsvHelp } from '@components/Entries/EntriesCsvActions/EntriesCsvHelp.tsx';
 import { EntriesFilters } from '@components/Entries/EntriesFilters/EntriesFilters.tsx';
 import { EntriesList } from '@components/Entries/EntriesList/EntriesList.tsx';
 import { EntriesMonth } from '@components/Entries/EntriesMonth/EntriesMonth.tsx';
@@ -64,6 +66,9 @@ export const Entries = () => {
     return <EntriesSkeleton />;
   }
 
+  const actions = <EntriesCsvActions />;
+  const help = <EntriesCsvHelp />;
+
   const toolbar = (
     <EntriesFilters
       typeFilter={typeFilter}
@@ -81,7 +86,7 @@ export const Entries = () => {
 
   if (entriesError && !entries) {
     return (
-      <EntriesList toolbar={toolbar}>
+      <EntriesList toolbar={toolbar} actions={actions} help={help}>
         <EntriesState variant="error" onAction={() => refetchEntries()} />
       </EntriesList>
     );
@@ -94,7 +99,7 @@ export const Entries = () => {
 
   if (!groups.length) {
     return (
-      <EntriesList toolbar={toolbar}>
+      <EntriesList toolbar={toolbar} actions={actions} help={help}>
         {hasActiveFilters ? (
           <EntriesState variant="noMatch" onAction={clearFilters} />
         ) : (
@@ -105,7 +110,7 @@ export const Entries = () => {
   }
 
   return (
-    <EntriesList toolbar={toolbar}>
+    <EntriesList toolbar={toolbar} actions={actions} help={help}>
       {groups.map((group) => (
         <EntriesMonth
           key={group.key}
