@@ -9,8 +9,16 @@ import {
 export const checkSession = (): Promise<AuthSessionResponse> =>
   apiFetch('/auth/session');
 
+/**
+ * Tells the backend which frontend started the login (production, a Vercel
+ * preview or localhost) so it can return there. The backend only honours
+ * origins on its allowlist and otherwise uses its own FRONTEND_URL.
+ */
+export const getGoogleLoginUrl = (origin = window.location.origin) =>
+  `${API_URL}/auth/google?redirect=${encodeURIComponent(origin)}`;
+
 export const loginWithGoogle = () => {
-  window.location.href = `${API_URL}/auth/google`;
+  window.location.href = getGoogleLoginUrl();
 };
 
 export const logout = () =>
