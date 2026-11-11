@@ -14,10 +14,15 @@ updates:
         update-types:
           - "minor"
           - "patch"
-    # OpenTelemetry packages must be upgraded together (1.x/2.x/3.x SDK and
-    # 0.x experimental packages are version-coupled, and 0.x minors are
-    # breaking). Migrate manually, then remove this block.
+    # OpenTelemetry packages are version-coupled (SDK 1.x/2.x/3.x plus 0.x
+    # experimental packages whose minors are breaking), so skip major/minor
+    # version bumps until they are migrated together. Patch bumps and
+    # security updates still come through (update-types only affects
+    # version updates). Remove this block after the migration.
     ignore:
       - dependency-name: "@opentelemetry/*"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
     labels:
       - "not merge"
