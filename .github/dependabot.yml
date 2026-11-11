@@ -15,11 +15,19 @@ updates:
       opentelemetry:
         patterns:
           - "@opentelemetry/*"
+      # vitest, @vitest/ui and @vitest/coverage-v8 must share the same major
+      # version, so bump them together (majors included).
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
       minor-and-patch:
         patterns:
           - "*"
         exclude-patterns:
           - "@opentelemetry/*"
+          - "vitest"
+          - "@vitest/*"
         update-types:
           - "minor"
           - "patch"
