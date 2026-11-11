@@ -8,21 +8,20 @@ updates:
     open-pull-requests-limit: 5
 
     groups:
+      # OpenTelemetry packages are version-coupled (SDK 1.x/2.x/3.x plus 0.x
+      # experimental packages whose minors are breaking), so they are bumped
+      # together in ONE PR, including majors. Expect CI to fail on it until
+      # src/instrumentation.ts is migrated; keep it open as a reminder.
+      opentelemetry:
+        patterns:
+          - "@opentelemetry/*"
       minor-and-patch:
         patterns:
           - "*"
+        exclude-patterns:
+          - "@opentelemetry/*"
         update-types:
           - "minor"
           - "patch"
-    # OpenTelemetry packages are version-coupled (SDK 1.x/2.x/3.x plus 0.x
-    # experimental packages whose minors are breaking), so skip major/minor
-    # version bumps until they are migrated together. Patch bumps and
-    # security updates still come through (update-types only affects
-    # version updates). Remove this block after the migration.
-    ignore:
-      - dependency-name: "@opentelemetry/*"
-        update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
     labels:
       - "not merge"
