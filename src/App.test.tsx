@@ -67,9 +67,7 @@ describe('App', () => {
 
       fireEvent.click(loginButton);
 
-      expect(window.location.href).toBe(
-        `${API_URL}/auth/google?redirect=${encodeURIComponent(window.location.origin)}`,
-      );
+      expect(window.location.href).toBe(`${API_URL}/auth/google`);
     });
   });
 });
