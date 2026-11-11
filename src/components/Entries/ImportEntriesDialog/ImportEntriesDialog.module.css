@@ -1,0 +1,89 @@
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  color: var(--chakra-colors-fg);
+}
+
+.muted {
+  color: var(--chakra-colors-fg-subtle);
+}
+
+.fileName {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--chakra-colors-fg-subtle);
+  overflow-wrap: anywhere;
+}
+
+.typeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.errors {
+  animation: rise 260ms ease 200ms both;
+  max-height: 160px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 8px 12px 8px 28px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--chakra-colors-red-700);
+  background: color-mix(in srgb, var(--chakra-colors-red-500) 8%, transparent);
+}
+
+:global(.dark) .errors {
+  color: var(--chakra-colors-red-300);
+}
+
+.fatal {
+  margin: 0;
+  font-size: 14px;
+  color: var(--chakra-colors-red-600);
+}
+
+:global(.dark) .fatal {
+  color: var(--chakra-colors-red-300);
+}
+
+.hint {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--chakra-colors-fg-subtle);
+}
+
+/* Summary lines appear one after another, then the error list */
+.summary li {
+  animation: rise 260ms ease both;
+}
+
+.summary li:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.summary li:nth-child(3) {
+  animation-delay: 140ms;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary li,
+  .errors {
+    animation: none;
+  }
+}

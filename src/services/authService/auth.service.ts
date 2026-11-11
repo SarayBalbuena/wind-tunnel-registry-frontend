@@ -24,7 +24,9 @@ export const requestMagicLink = (
 ): Promise<MagicLinkResponse> =>
   apiFetch('/auth/magic-link', {
     method: 'POST',
-    body: JSON.stringify(arg),
+    // The backend opens the emailed link on this frontend (production, a
+    // Vercel preview or localhost) when the origin is on its allowlist.
+    body: JSON.stringify({ ...arg, origin: window.location.origin }),
   });
 
 export const verifyMagicLink = (

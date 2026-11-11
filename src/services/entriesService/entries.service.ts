@@ -42,3 +42,28 @@ export const deleteEntry = async (id: string): Promise<void> => {
     method: 'DELETE',
   });
 };
+
+/** Keeps each request well under the backend's JSON body limit. */
+export const IMPORT_CHUNK_SIZE = 200;
+
+/**
+ * Creates many entries through `POST /entries/import`, in sequential chunks.
+ * A chunk is all-or-nothing on the backend, so a failure can leave earlier
+ * chunks saved: re-importing the same file skips them (see `splitNewEntries`).
+ */
+export const importEntries = async (
+  entries: CreateEntryPayload[],
+): Promise<Entry[]> => {
+  const imported: Entry[] = [];
+
+  for (let i = 0; i < entries.length; i += IMPORT_CHUNK_SIZE) {
+    const chunk = entries.slice(i, i + IMPORT_CHUNK_SIZE);
+    const created: Entry[] = await apiFetch('/entries/import', {
+      method: 'POST',
+      body: JSON.stringify({ entries: chunk }),
+    });
+    imported.push(...created);
+  }
+
+  return imported;
+};

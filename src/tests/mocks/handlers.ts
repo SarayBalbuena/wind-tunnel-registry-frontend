@@ -43,6 +43,15 @@ export const handlers = [
       { status: 201 },
     );
   }),
+  http.post(`${API_URL}/entries/import`, async ({ request }) => {
+    const { entries } = (await request.json()) as {
+      entries: Record<string, unknown>[];
+    };
+    return HttpResponse.json(
+      entries.map((entry, index) => ({ id: `imported-${index}`, ...entry })),
+      { status: 201 },
+    );
+  }),
   http.delete(`${API_URL}/entries/:id`, () => {
     return HttpResponse.json({ ok: true }, { status: 200 });
   }),

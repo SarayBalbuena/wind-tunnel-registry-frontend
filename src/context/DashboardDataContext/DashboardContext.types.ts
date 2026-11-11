@@ -17,6 +17,8 @@ export interface DashboardDataContextType {
   allEntriesError: unknown;
   createEntry: (payload: CreateEntryPayload) => Promise<void>;
   isCreatingEntry: boolean;
+  importEntries: (entries: CreateEntryPayload[]) => Promise<void>;
+  isImportingEntries: boolean;
   deleteEntry: (id: string) => Promise<void>;
   isDeletingEntry: boolean;
   updateEntry: (arg: {

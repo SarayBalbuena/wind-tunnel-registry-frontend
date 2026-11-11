@@ -7,6 +7,7 @@ import {
   isFlightDetailsKey,
   useFlightDetails,
 } from '@hooks/useFlightDetails/useFlightDetails';
+import { useImportEntries } from '@hooks/useImportEntries/useImportEntries';
 import { useUpdateEntry } from '@hooks/useUpdateEntry/useUpdateEntry';
 import { useSWRConfig } from 'swr';
 import { type DashboardDataContextType } from './DashboardContext.types.ts';
@@ -49,6 +50,9 @@ export const DashboardDataProvider = ({
   const { createEntry: createEntryMutation, isCreatingEntry } =
     useCreateEntry();
 
+  const { importEntries: importEntriesMutation, isImportingEntries } =
+    useImportEntries();
+
   const { deleteEntry: deleteEntryMutation, isDeletingEntry } =
     useDeleteEntry();
 
@@ -59,6 +63,13 @@ export const DashboardDataProvider = ({
     payload: Parameters<typeof createEntryMutation>[0],
   ) => {
     await createEntryMutation(payload);
+    await Promise.all([mutateEntries(), mutateReports()]);
+  };
+
+  const importEntries = async (
+    payload: Parameters<typeof importEntriesMutation>[0],
+  ) => {
+    await importEntriesMutation(payload);
     await Promise.all([mutateEntries(), mutateReports()]);
   };
 
@@ -92,6 +103,8 @@ export const DashboardDataProvider = ({
         isUpdatingEntry,
         isCreatingEntry,
         createEntry,
+        importEntries,
+        isImportingEntries,
       }}
     >
       {children}

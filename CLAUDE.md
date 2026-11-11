@@ -58,6 +58,7 @@ Deeper docs:
 
 ## Gotchas
 
+- **Dev server port is always 5173** (`strictPort` in `vite.config.ts`). Never start it on another port (no `--port`, no 5174). If 5173 is busy, the user's dev server is already running: reuse it for checks/screenshots and do not kill it.
 - `API_URL` is a global constant, not `import.meta.env` — use it in services and MSW handlers.
 - `DashboardDataProvider` is mounted twice (in `DashboardProviders` from `main.tsx` and again in `App.tsx`). Consumers get the inner one. Don't add a third; see `docs/architecture/state-management.md`.
 - React Compiler is on: avoid manual `useMemo`/`useCallback` unless measured; never mutate props/state.
