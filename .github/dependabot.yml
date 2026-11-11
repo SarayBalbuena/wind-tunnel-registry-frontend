@@ -14,5 +14,10 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    # OpenTelemetry packages must be upgraded together (1.x/2.x/3.x SDK and
+    # 0.x experimental packages are version-coupled, and 0.x minors are
+    # breaking). Migrate manually, then remove this block.
+    ignore:
+      - dependency-name: "@opentelemetry/*"
     labels:
       - "not merge"
