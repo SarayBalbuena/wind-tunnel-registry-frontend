@@ -24,24 +24,22 @@ describe('ReportsCard', () => {
         description: 'Flights performed with other skydivers.',
         values: ['1', 'h'],
       },
-    ])('should render card $testId correctly ', async ({
-      testId,
-      label,
-      description,
-      values,
-    }) => {
-      render(<Reports />);
+    ])(
+      'should render card $testId correctly ',
+      async ({ testId, label, description, values }) => {
+        render(<Reports />);
 
-      const card = await screen.findByTestId(testId);
-      const cardQueries = within(card);
+        const card = await screen.findByTestId(testId);
+        const cardQueries = within(card);
 
-      expect(cardQueries.getByText(label)).toBeInTheDocument();
-      expect(cardQueries.getByText(description)).toBeInTheDocument();
+        expect(cardQueries.getByText(label)).toBeInTheDocument();
+        expect(cardQueries.getByText(description)).toBeInTheDocument();
 
-      values.forEach((value) => {
-        expect(cardQueries.getByText(value)).toBeInTheDocument();
-      });
-    });
+        values.forEach((value) => {
+          expect(cardQueries.getByText(value)).toBeInTheDocument();
+        });
+      },
+    );
   });
 
   describe('when showing the month trend', () => {

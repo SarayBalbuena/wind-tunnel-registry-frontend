@@ -28,7 +28,7 @@ export const DashboardUIProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: 'CLOSE_ENTRY_FORM' });
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the open/close callbacks only dispatch, so `state` is the sole real dependency
   const value = useMemo<DashboardUIContextType>(
     () => ({
       isEntryFormOpen: state.isEntryFormOpen,

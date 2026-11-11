@@ -24,6 +24,22 @@ const Wrapper: FC<{ children: ReactNode }> = ({ children }) => (
 );
 
 /**
+ * Initial route for the next render. Set by `render`/`renderHook` just before
+ * mounting, so `RouterWrapper` can stay a module-level component.
+ */
+let currentRoute = '/';
+
+/**
+ * The router sits outside the providers, like BrowserRouter in main.tsx,
+ * because some providers read the URL.
+ */
+const RouterWrapper: FC<{ children: ReactNode }> = ({ children }) => (
+  <MemoryRouter initialEntries={[currentRoute]}>
+    <Wrapper>{children}</Wrapper>
+  </MemoryRouter>
+);
+
+/**
  * Renders a React component wrapped with `SWRConfig` and `MemoryRouter`.
  *
  * @param ui - The React component to render.
@@ -39,13 +55,7 @@ const render = (
     ...options
   }: RenderOptions & { route?: string; path?: string } = {},
 ) => {
-  // The router sits outside the providers, like BrowserRouter in main.tsx,
-  // because some providers read the URL.
-  const RouterWrapper: FC<{ children: ReactNode }> = ({ children }) => (
-    <MemoryRouter initialEntries={[route]}>
-      <Wrapper>{children}</Wrapper>
-    </MemoryRouter>
-  );
+  currentRoute = route;
 
   return rtlRender(
     <Routes>
@@ -67,11 +77,7 @@ const renderHook = <T,>(
   hook: () => T,
   { route = '/' }: { route?: string } = {},
 ) => {
-  const RouterWrapper: FC<{ children: ReactNode }> = ({ children }) => (
-    <MemoryRouter initialEntries={[route]}>
-      <Wrapper>{children}</Wrapper>
-    </MemoryRouter>
-  );
+  currentRoute = route;
 
   return rtlRenderHook(() => hook(), { wrapper: RouterWrapper });
 };
