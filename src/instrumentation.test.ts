@@ -3,10 +3,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
   provider: vi.fn(),
   register: vi.fn(),
-  addSpanProcessor: vi.fn(),
   exporter: vi.fn(),
   registerInstrumentations: vi.fn(),
   resource: vi.fn(),
+  processor: vi.fn(),
 }));
 
 vi.mock('@opentelemetry/context-zone', () => ({
@@ -29,19 +29,21 @@ vi.mock('@opentelemetry/instrumentation-xml-http-request', () => ({
   XMLHttpRequestInstrumentation: class {},
 }));
 vi.mock('@opentelemetry/resources', () => ({
-  Resource: class {
-    constructor(attributes: unknown) {
-      mocks.resource(attributes);
-    }
+  resourceFromAttributes: (attributes: unknown) => {
+    mocks.resource(attributes);
+    return {};
   },
 }));
 vi.mock('@opentelemetry/sdk-trace-web', () => ({
-  BatchSpanProcessor: class {},
+  BatchSpanProcessor: class {
+    constructor(exporter: unknown) {
+      mocks.processor(exporter);
+    }
+  },
   WebTracerProvider: class {
     constructor(options: unknown) {
       mocks.provider(options);
     }
-    addSpanProcessor = mocks.addSpanProcessor;
     register = mocks.register;
   },
 }));
@@ -120,6 +122,17 @@ describe('instrumentation', () => {
         url: 'https://otlp.test/v1/traces',
         headers: { Authorization: 'Api-Token a=b', 'X-Other': '1' },
       });
+    });
+
+    it('should pass the batch span processor to the provider', async () => {
+      await loadInstrumentation();
+
+      expect(mocks.processor).toHaveBeenCalledTimes(1);
+      expect(mocks.provider).toHaveBeenCalledWith(
+        expect.objectContaining({
+          spanProcessors: [expect.anything()],
+        }),
+      );
     });
 
     it('should set the service name on the resource', async () => {
