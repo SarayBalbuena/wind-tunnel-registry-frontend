@@ -58,14 +58,14 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@tests': path.resolve(__dirname, './src/tests'),
-        '@components': path.resolve(__dirname, './src/components'),
-        '@pages': path.resolve(__dirname, './src/pages'),
-        '@services': path.resolve(__dirname, './src/services'),
-        '@assets': path.resolve(__dirname, './src/assets'),
-        '@App': path.resolve(__dirname, './src/App.tsx'),
-        '@hooks': path.resolve(__dirname, './src/hooks'),
-        '@': path.resolve(__dirname, './src'),
+        '@tests': path.resolve(import.meta.dirname, './src/tests'),
+        '@components': path.resolve(import.meta.dirname, './src/components'),
+        '@pages': path.resolve(import.meta.dirname, './src/pages'),
+        '@services': path.resolve(import.meta.dirname, './src/services'),
+        '@assets': path.resolve(import.meta.dirname, './src/assets'),
+        '@App': path.resolve(import.meta.dirname, './src/App.tsx'),
+        '@hooks': path.resolve(import.meta.dirname, './src/hooks'),
+        '@': path.resolve(import.meta.dirname, './src'),
       },
     },
     test: {
