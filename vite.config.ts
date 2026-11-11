@@ -36,6 +36,9 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       open: true,
+      port: 5173,
+      // Fail instead of silently moving to another port when 5173 is busy.
+      strictPort: true,
     },
     plugins: [react(), babel({ presets: [reactCompilerPreset()] })],
     build: {
